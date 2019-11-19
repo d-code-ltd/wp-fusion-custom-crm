@@ -1,10 +1,11 @@
-# WP Fusion - Custom CRM
+# WP Fusion - Mailengine CRM
 
-Boostrap for connecting WP Fusion to a custom CRM
+[Mailengine](https://www.mailengine.hu) is a professional emailmarketing service.
+This is a custom CRM extension for [WP Fusion](https://wpfusionplugin.com/) to connect your Wordpress site with your [Mailengine](https://www.mailengine.hu).
 
 ## Getting Started
 
-This plugin can be customized to allow [WP Fusion](https://wpfusionplugin.com/) to connect to custom CRM systems. Just add your API calls to the methods provided, stir, and serve!
+![Mailengine](https://www.mailengine.hu/images/me_logo_b.svg "Mailengine emailmarketing service")
 
 ### Prerequisites
 
