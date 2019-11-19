@@ -1,6 +1,6 @@
 <?php
 
-class WPF_Custom_Admin {
+class WPF_Mailengine_Admin {
 
 	private $slug;
 	private $name;
@@ -20,8 +20,8 @@ class WPF_Custom_Admin {
 		$this->crm  = $crm;
 
 		add_filter( 'wpf_configure_settings', array( $this, 'register_connection_settings' ), 15, 2 );
-		add_action( 'show_field_custom_header_begin', array( $this, 'show_field_custom_header_begin' ), 10, 2 );
-		add_action( 'show_field_custom_key_end', array( $this, 'show_field_custom_key_end' ), 10, 2 );
+		add_action( 'show_field_mailengine_header_begin', array( $this, 'show_field_mailengine_header_begin' ), 10, 2 );
+		add_action( 'show_field_mailengine_key_end', array( $this, 'show_field_mailengine_key_end' ), 10, 2 );
 
 		// AJAX
 		add_action( 'wp_ajax_wpf_test_connection_' . $this->slug, array( $this, 'test_connection' ) );
@@ -57,28 +57,39 @@ class WPF_Custom_Admin {
 
 		$new_settings = array();
 
-		$new_settings['custom_header'] = array(
-			'title'   => __( 'Custom CRM Configuration', 'wp-fusion' ),
+		$new_settings['mailengine_header'] = array(
+			'title'   => __( 'Mailengine Configuration', 'wp-fusion' ),
 			'std'     => 0,
 			'type'    => 'heading',
-			'section' => 'setup'
+			'section' => 'setup',
+			'desc'	  => __( 'Before attempting to connect to Mautic, you\'ll first need to enable API access. You can do this by going to the configuration screen, and selecting API Settings. Turn both <strong>API Enabled</strong> and <strong>Enable Basic HTTP Auth</strong> to On.', 'wp-fusion' )
 		);
 
-		$new_settings['custom_url'] = array(
+		$new_settings['mailengine_wsdl_url'] = array(
 			'title'   => __( 'URL', 'wp-fusion' ),
-			'desc'    => __( 'URL to your custom CRM', 'wp-fusion' ),
+			'desc'    => __( 'URL of your Mailengine WSDL', 'wp-fusion' ),
 			'std'     => '',
 			'type'    => 'text',
 			'section' => 'setup'
 		);
 
-		$new_settings['custom_key'] = array(
-			'title'       => __( 'API Key', 'wp-fusion' ),
-			'desc'        => __( 'Your API key', 'wp-fusion' ),
-			'type'        => 'api_validate',
+		$new_settings['mailengine_client_id'] = array(
+			'title'   => __( 'Client id', 'wp-fusion' ),
+			'desc'    => __( 'Enter the Client id for your Mailengine account.', 'wp-fusion' ),
+			'std'     => '',
+			'type'    => 'text',
+			'class'   => 'api_key',
+			'section' => 'setup'
+		);
+
+		$new_settings['mailengine_subscribe_id'] = array(
+			'title'       => __( 'Subscribe id', 'wp-fusion' ),
+			'desc'        => __( 'Enter the Subscribe id for your Mailengine group.', 'wp-fusion' ),
+			//'type'        => 'api_validate',
+			'type'    => 'text',
 			'section'     => 'setup',
 			'class'       => 'api_key',
-			'post_fields' => array( 'custom_url', 'custom_key' )
+			'post_fields' => array( 'mailengine_wsdl_url', 'mailengine_client_id', 'mailengine_subscribe_id')
 		);
 
 		$settings = wp_fusion()->settings->insert_setting_after( 'crm', $settings, $new_settings );
@@ -95,7 +106,7 @@ class WPF_Custom_Admin {
 	 * @since   1.0
 	 */
 
-	public function show_field_custom_header_begin( $id, $field ) {
+	public function show_field_mailengine_header_begin( $id, $field ) {
 
 		echo '</table>';
 		$crm = wp_fusion()->settings->get( 'crm' );
@@ -110,7 +121,7 @@ class WPF_Custom_Admin {
 	 * @since   1.0
 	 */
 
-	public function show_field_custom_key_end( $id, $field ) {
+	public function show_field_mailengine_key_end( $id, $field ) {
 
 		if ( $field['desc'] != '' ) {
 			echo '<span class="description">' . $field['desc'] . '</span>';
@@ -133,20 +144,22 @@ class WPF_Custom_Admin {
 
 	public function test_connection() {
 
-		$api_url = $_POST['custom_url'];
-		$api_key = $_POST['custom_key'];
+		$wsdl_url = $_POST['mailengine_wsdl_url'];
+		$client_id = $_POST['mailengine_client_id'];
+		$subscribe_id = $_POST['mailengine_subscribe_id'];
 
-		$connection = $this->crm->connect( $api_url, $api_key, true );
+		$connection = $this->crm->connect( $wsdl_url, $client_id, $subscribe_id, true );
 
 		if ( is_wp_error( $connection ) ) {
-
+			//TODO
 			wp_send_json_error( $connection->get_error_message() );
 
 		} else {
 
 			$options 							= wp_fusion()->settings->get_all();
-			$options['custom_url'] 				= $api_url;
-			$options['custom_key'] 				= $api_key;
+			$options['mailengine_wsdl_url'] 	= $wsdl_url;
+			$options['mailengine_client_id'] 	= $client_id;
+			$options['mailengine_subscribe_id'] = $subscribe_id;
 			$options['crm'] 					= $this->slug;
 			$options['connection_configured'] 	= true;
 

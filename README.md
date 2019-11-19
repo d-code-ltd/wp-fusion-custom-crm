@@ -10,14 +10,21 @@ This is a custom CRM extension for [WP Fusion](https://wpfusionplugin.com/) to c
 ### Prerequisites
 
 Requires [WP Fusion](https://wpfusionplugin.com/)
+Requires [PHP SoapClient](https://www.php.net/manual/en/class.soapclient.php)
 
 ### Installing
 
 Upload to your /wp-content/plugins/ directory
 
+### Features
+
+* Synchronize data via Soap connection
+* Semi-bidirectional data sync (Pull is available, but no webhook support)
+
 ## Authors
 
 * **Jack Arturo** - *Initial work* - [Very Good Plugins](https://github.com/verygoodplugins)
+* **@pety-dc** - *Mailengine adaptation* - [d-code Ltd](https://github.com/d-code-ltd)
 
 ## License
 

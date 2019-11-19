@@ -1,18 +1,12 @@
 <?php
 
-class WPF_Custom {
+class WPF_Mailengine {
 
 	/**
-	 * Contains API params
+	 * Contains essential params
 	 */
 
 	public $params;
-
-	/**
-	 * Contains API url
-	 */
-
-	public $url;
 
 	/**
 	 * Lets pluggable functions know which features are supported by the CRM
@@ -29,16 +23,15 @@ class WPF_Custom {
 
 	public function __construct() {
 
-		$this->slug     = 'custom';
-		$this->name     = 'Custom';
+		$this->slug     = 'mailengine';
+		$this->name     = 'Mailengine';
 		$this->supports = array('add_tags', 'add_fields');
 
 		// Set up admin options
 		if ( is_admin() ) {
-			require_once dirname( __FILE__ ) . '/class-wpf-custom-admin.php';
-			new WPF_Custom_Admin( $this->slug, $this->name, $this );
+			require_once dirname( __FILE__ ) . '/class-wpf-mailengine-admin.php';
+			new WPF_Mailengine_Admin( $this->slug, $this->name, $this );
 		}
-
 	}
 
 	/**
@@ -62,20 +55,19 @@ class WPF_Custom {
 	 * @return  array Params
 	 */
 
-	public function get_params( $api_url = null, $api_key = null ) {
+	public function get_params( $wsdl_url = null, $client_id = null, $subscribe_id = null ) {
 
 		// Get saved data from DB
-		if ( empty( $api_url ) || empty( $api_key ) ) {
-			$api_url = wp_fusion()->settings->get( 'custom_url' );
-			$api_key = wp_fusion()->settings->get( 'custom_key' );
+		if ( empty( $wsdl_url ) || empty( $client_id ) || empty( $subscribe_id ) ) {
+			$wsdl_url = wp_fusion()->settings->get( 'mailengine_wsdl_url' );
+			$client_id = wp_fusion()->settings->get( 'mailengine_client_id' );
+			$subscribe_id = wp_fusion()->settings->get( 'mailengine_subscribe_id' );
 		}
-
-		$this->url = $api_url;
-
+	
 		$this->params = array(
-			'headers'     => array(
-				"Api-Key"   => $api_key
-			)
+			'wsdl_url' => $wsdl_url,
+			'client_id' => $client_id,
+			'subscribe_id' => $subscribe_id
 		);
 
 		return $this->params;
@@ -89,14 +81,14 @@ class WPF_Custom {
 	 * @return  bool
 	 */
 
-	public function connect( $api_url = null, $api_key = null, $test = false ) {
+	public function connect( $wsdl_url = null, $client_id = null, $subscribe_id = null, $test = false ) {
 
 		if ( $test == false ) {
 			return true;
 		}
 
 		if ( ! $this->params ) {
-			$this->get_params( $api_url, $api_key );
+			$this->get_params( $wsdl_url, $client_id, $subscribe_id );
 		}
 
 		$request  = $this->url . '/endpoint/';
