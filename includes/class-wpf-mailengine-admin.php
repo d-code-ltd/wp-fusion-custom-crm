@@ -150,10 +150,8 @@ class WPF_Mailengine_Admin {
 
 		$connection = $this->crm->connect( $wsdl_url, $client_id, $subscribe_id, true );
 
-		if ( is_wp_error( $connection ) ) {
-			//TODO
+		if ( is_wp_error( $connection ) ) {			
 			wp_send_json_error( $connection->get_error_message() );
-
 		} else {
 
 			$options 							= wp_fusion()->settings->get_all();
@@ -166,7 +164,6 @@ class WPF_Mailengine_Admin {
 			wp_fusion()->settings->set_all( $options );
 
 			wp_send_json_success();
-
 		}
 
 		die();

@@ -15,6 +15,12 @@ class WPF_Mailengine {
 	public $supports;
 
 	/**
+	 * SoapClient
+	 */
+
+	public $subscribe_service;
+
+	/**
 	 * Get things started
 	 *
 	 * @access  public
@@ -55,7 +61,7 @@ class WPF_Mailengine {
 	 * @return  array Params
 	 */
 
-	public function get_params( $wsdl_url = null, $client_id = null, $subscribe_id = null ) {
+	public function get_params( $wsdl_url = null, $client_id = null, $subscribe_id = null) {
 
 		// Get saved data from DB
 		if ( empty( $wsdl_url ) || empty( $client_id ) || empty( $subscribe_id ) ) {
@@ -63,12 +69,31 @@ class WPF_Mailengine {
 			$client_id = wp_fusion()->settings->get( 'mailengine_client_id' );
 			$subscribe_id = wp_fusion()->settings->get( 'mailengine_subscribe_id' );
 		}
-	
+
+		
+		$this->subscribe_service = new \SoapClient($wsdl_url, [
+			'cache_wsdl' => WSDL_CACHE_NONE,
+			'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP | 9,
+			'exceptions' => false
+		]);
+		
+		/*
+		catch (\SoapFault $e) {
+			
+	    	die('soapfault never fires!');
+		} catch (\Exception $e) {
+		    die('exception won\t t');
+		} catch (\ErrorException $e) {
+	    	die('error exception also doesn\'t error');
+		}
+*/
 		$this->params = array(
 			'wsdl_url' => $wsdl_url,
 			'client_id' => $client_id,
 			'subscribe_id' => $subscribe_id
 		);
+
+
 
 		return $this->params;
 	}
@@ -90,17 +115,17 @@ class WPF_Mailengine {
 		if ( ! $this->params ) {
 			$this->get_params( $wsdl_url, $client_id, $subscribe_id );
 		}
+		
+		// Validate the connection with a dummy userdata request
 
-		$request  = $this->url . '/endpoint/';
-		$response = wp_remote_get( $request, $this->params );
-
-		// Validate the connection
-
-		if( is_wp_error( $response ) ) {
-			return $response;
+		$result = $this->subscribe_service->GetUserData($this->params['client_id'], $this->params['subscribe_id'], 'id', 0);
+		if (is_soap_fault($result)) {
+			return new WP_Error( $result->faultcode, "SOAP Fault: (faultcode: {$result->faultcode}, faultstring: {$result->faultstring})" );		    
 		}
 
-		return true;
+		if (is_array($result) || $result == 'invalid user'){
+			return true;
+		}
 	}
 
 
