@@ -77,16 +77,6 @@ class WPF_Mailengine {
 			'exceptions' => false
 		]);
 		
-		/*
-		catch (\SoapFault $e) {
-			
-	    	die('soapfault never fires!');
-		} catch (\Exception $e) {
-		    die('exception won\t t');
-		} catch (\ErrorException $e) {
-	    	die('error exception also doesn\'t error');
-		}
-*/
 		$this->params = array(
 			'wsdl_url' => $wsdl_url,
 			'client_id' => $client_id,
@@ -115,16 +105,19 @@ class WPF_Mailengine {
 		if ( ! $this->params ) {
 			$this->get_params( $wsdl_url, $client_id, $subscribe_id );
 		}
-		
+
 		// Validate the connection with a dummy userdata request
 
 		$result = $this->subscribe_service->GetUserData($this->params['client_id'], $this->params['subscribe_id'], 'id', 0);
+
 		if (is_soap_fault($result)) {
 			return new WP_Error( $result->faultcode, "SOAP Fault: (faultcode: {$result->faultcode}, faultstring: {$result->faultstring})" );		    
 		}
 
 		if (is_array($result) || $result == 'invalid user'){
 			return true;
+		}else{
+			return new WP_Error( "invalid user", "SOAP warning! The Soap request was done, but returned with unexpected result: <strong>invalid user</strong>. (Possible misconfiguration)" );		    	
 		}
 	}
 
@@ -163,19 +156,25 @@ class WPF_Mailengine {
 
 		if ( ! $this->params ) {
 			$this->get_params();
-		}
-
-
-		$request  = $this->url . '/endpoint/';
-		$response = wp_remote_get( $request, $this->params );
-
-		if( is_wp_error( $response ) ) {
-			return $response;
-		}
-
+		}		
+		
 		$available_tags = array();
 
-		// Load available tags into $available_tags like 'tag_id' => 'Tag Label'
+		$result = $this->subscribe_service->GetMetaDataTags($this->params['client_id'], $this->params['subscribe_id']);		
+
+		if (is_soap_fault($result)) {
+			return new WP_Error( $result->faultcode, "SOAP Fault: (faultcode: {$result->faultcode}, faultstring: {$result->faultstring})" );		    
+		}
+
+		if (is_array($result)){
+			if(!empty($result)) {
+				foreach($result as $tag_id => $tag) {
+					$available_tags[ $tag ] = $tag;
+				}
+			}			
+		}else{
+			return new WP_Error( "no tags found", "SOAP warning! The Soap request for syncing tags was done, but returned with empty result. (No tags for group?)" );		    	
+		}
 
 		wp_fusion()->settings->set( 'available_tags', $available_tags );
 
@@ -195,19 +194,31 @@ class WPF_Mailengine {
 		if ( ! $this->params ) {
 			$this->get_params();
 		}
-
-		$request    = $this->url . '/endpoint/';
-		$response   = wp_remote_get( $request, $this->params );
-
-		if( is_wp_error( $response ) ) {
-			return $response;
-		}
-
+		
 		$crm_fields = array();
 
-		// Load available fields into $crm_fields like 'field_key' => 'Field Label'
+		$result = $this->subscribe_service->GetMetaDataUserFields($this->params['client_id'], $this->params['subscribe_id']);
 
-		asort( $crm_fields );
+		if (is_soap_fault($result)) {
+			return new WP_Error( $result->faultcode, "SOAP Fault: (faultcode: {$result->faultcode}, faultstring: {$result->faultstring})" );		    
+		}
+
+		if (is_array($result)){
+			if(!empty($result)) {
+				foreach($result as $field_id => $field) {
+					$crm_fields[ $field['variable_name'] ] = $field['variable_name']." (".$field['question'].")";
+				}
+			}
+		}else{
+			return new WP_Error( "no crm fields found", "SOAP warning! The Soap request for CRM fields was done, but returned with empty result: (No fields for group?)" );		    	
+		}
+
+
+
+
+
+
+		asort( $crm_fields );	
 		wp_fusion()->settings->set( 'crm_fields', $crm_fields );
 
 		return $crm_fields;

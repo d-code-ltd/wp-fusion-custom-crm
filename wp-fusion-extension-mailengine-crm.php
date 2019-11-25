@@ -3,7 +3,7 @@
 /*
 Plugin Name: WP Fusion - Mailengine CRM
 Description: Mailengine CRM for WP Fusion based on "Boostrap for connecting WP Fusion to a custom CRM"
-Plugin URI: https://www.d-code.hu/
+Plugin URI: https://github.com/d-code-ltd/wp-fusion-extension-mailengine-crm
 Version: 1.0
 Author: d-code ltd
 Author URI: https://www.d-code.hu/
@@ -46,11 +46,9 @@ if ( ! class_exists( 'WPF_Mailengine' ) ) {
  * @return  array CRMs
  */
 
-function wpf_mailengine_crm( $crms ) {
-
-	$crms['mailengine'] = 'WPF_Mailengine';
+function wpf_mailengine_crm( $crms ) {	
+	$crms['mailengine'] = 'WPF_Mailengine';		
 	return $crms;
-
 }
 
-add_filter( 'wpf_crms', 'wpf_mailengine_crm' );
+add_filter( 'wpf_crms', 'wpf_mailengine_crm');
