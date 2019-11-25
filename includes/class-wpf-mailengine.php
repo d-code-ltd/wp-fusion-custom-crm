@@ -31,7 +31,7 @@ class WPF_Mailengine {
 
 		$this->slug     = 'mailengine';
 		$this->name     = 'Mailengine';
-		$this->supports = array('add_tags', 'add_fields');
+		$this->supports = array('combined_updates');
 
 		// Set up admin options
 		if ( is_admin() ) {
@@ -210,13 +210,8 @@ class WPF_Mailengine {
 				}
 			}
 		}else{
-			return new WP_Error( "no crm fields found", "SOAP warning! The Soap request for CRM fields was done, but returned with empty result: (No fields for group?)" );		    	
+			return new WP_Error( "no crm fields found", "SOAP warning! The Soap request for CRM fields was done, but returned with empty result (No fields for group?)" );		    	
 		}
-
-
-
-
-
 
 		asort( $crm_fields );	
 		wp_fusion()->settings->set( 'crm_fields', $crm_fields );
@@ -238,16 +233,23 @@ class WPF_Mailengine {
 			$this->get_params();
 		}
 
-		$request      = $this->url . '/endpoint/';
-		$response     = wp_remote_get( $request, $this->params );
+		$result = $this->subscribe_service->GetUserData($this->params['client_id'], $this->params['subscribe_id'], 'email', $email_address);
 
-		if( is_wp_error( $response ) ) {
-			return $response;
+		if (is_soap_fault($result)) {
+			return new WP_Error( $result->faultcode, "SOAP Fault: (faultcode: {$result->faultcode}, faultstring: {$result->faultstring})" );		    
 		}
 
-		// Parse response for contact ID here
-
-		return $contact_id;
+		if (is_array($result)){
+			if (!empty($result['id'])){
+				return $result['id'];
+			}else{
+				return false;
+			}
+		}elseif($result == 'invalid user'){
+			return false;
+		}else{
+			return new WP_Error($result, "SOAP warning! The Soap request was done, but returned with the following error: {$result}" );		    	
+		}			
 	}
 
 
@@ -263,17 +265,43 @@ class WPF_Mailengine {
 		if ( ! $this->params ) {
 			$this->get_params();
 		}
+		
+		$result = $this->subscribe_service->GetUserData($this->params['client_id'], $this->params['subscribe_id'], 'id', $contact_id);
 
-		$request      = $this->url . '/endpoint/';
-		$response     = wp_remote_get( $request, $this->params );
-
-		if( is_wp_error( $response ) ) {
-			return $response;
+		if (is_soap_fault($result)) {
+			return new WP_Error( $result->faultcode, "SOAP Fault: (faultcode: {$result->faultcode}, faultstring: {$result->faultstring})" );		    
 		}
 
-		// Parse response to create an array of tag ids. $tags = array(123, 678, 543);
+		$contact_tags = array();
 
-		return $tags;
+		if (is_array($result)){
+			if (!empty($result['taglist'])){
+				
+			}else{
+				return $contact_tags;
+			}
+		}else{
+			return new WP_Error($result, "SOAP warning! The Soap request was done, but returned with the following error: {$result}" );		    	
+		}
+
+		$found_new = false;
+		$available_tags = wp_fusion()->settings->get('available_tags');
+
+		foreach ($result['taglist'] as $ŧag_id => $tag){
+			$contact_tags[] = $tag;
+
+			// Handle tags that might not have been picked up by sync_tags
+			if( !isset( $available_tags[$tag] ) ) {
+				$available_tags[$tag] = $tag;
+				$found_new = true;
+			}
+		}
+
+		if( $found_new ) {
+			wp_fusion()->settings->set( 'available_tags', $available_tags );
+		}
+	
+		return $contact_tags;	
 	}
 
 	/**
@@ -284,7 +312,7 @@ class WPF_Mailengine {
 	 */
 
 	public function apply_tags( $tags, $contact_id ) {
-
+/*
 		if ( ! $this->params ) {
 			$this->get_params();
 		}
@@ -300,6 +328,7 @@ class WPF_Mailengine {
 		}
 
 		return true;
+*/
 	}
 
 	/**
@@ -310,7 +339,7 @@ class WPF_Mailengine {
 	 */
 
 	public function remove_tags( $tags, $contact_id ) {
-
+/*
 		if ( ! $this->params ) {
 			$this->get_params();
 		}
@@ -326,7 +355,7 @@ class WPF_Mailengine {
 		}
 
 		return true;
-
+*/
 	}
 
 
@@ -338,7 +367,7 @@ class WPF_Mailengine {
 	 */
 
 	public function add_contact( $contact_data, $map_meta_fields = true ) {
-
+/*
 		if ( ! $this->params ) {
 			$this->get_params();
 		}
@@ -362,7 +391,7 @@ class WPF_Mailengine {
 		// Get new contact ID out of response
 
 		return $contact_id;
-
+*/
 	}
 
 	/**
@@ -373,7 +402,7 @@ class WPF_Mailengine {
 	 */
 
 	public function update_contact( $contact_id, $contact_data, $map_meta_fields = true ) {
-
+/*
 		if ( ! $this->params ) {
 			$this->get_params();
 		}
@@ -393,6 +422,7 @@ class WPF_Mailengine {
 		}
 
 		return true;
+*/
 	}
 
 	/**
@@ -403,7 +433,7 @@ class WPF_Mailengine {
 	 */
 
 	public function load_contact( $contact_id ) {
-
+/*
 		if ( ! $this->params ) {
 			$this->get_params();
 		}
@@ -428,6 +458,7 @@ class WPF_Mailengine {
 		}
 
 		return $user_meta;
+*/
 	}
 
 
@@ -439,7 +470,7 @@ class WPF_Mailengine {
 	 */
 
 	public function load_contacts( $tag ) {
-
+/*
 		if ( ! $this->params ) {
 			$this->get_params();
 		}
@@ -457,7 +488,7 @@ class WPF_Mailengine {
 
 
 		return $contact_ids;
-
+*/
 	}
 
 }

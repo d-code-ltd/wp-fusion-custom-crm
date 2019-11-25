@@ -13,6 +13,12 @@ class WPF_Mailengine_Admin {
 	 * @since   1.0
 	 */
 
+	static $docs = array(
+		"hu" => 'https://docs.google.com/document/d/1lKJSEMT-731bWRIQsVnHL8sosQkqrx6rOI_VR6bWB5k/edit#heading=h.tnjtjhbffgks',
+		'en' => 'https://docs.google.com/document/d/1vPCd8_DrPGC1GYHEy6zyNFKy7ymYVjmj5wzUqYd30ds/edit#heading=h.xhfywkl8jbby'				 
+	);
+
+
 	public function __construct( $slug, $name, $crm ) {
 
 		$this->slug = $slug;
@@ -46,7 +52,8 @@ class WPF_Mailengine_Admin {
 	 */
 
 	public function init() {		
-
+		add_filter( 'wpf_initialize_options', array( $this, 'add_default_fields' ), 10 );
+		add_filter( 'wpf_configure_settings', array( $this, 'register_settings' ), 10, 30);
 	}
 
 	/**
@@ -98,7 +105,7 @@ class WPF_Mailengine_Admin {
 			'std'     => 0,
 			'type'    => 'heading',
 			'section' => 'setup',
-			'desc'	  => __( 'Before attempting to connect to Mailengine, you\'ll first need to enable Soap access. You can do this by requesting a <strong>client_id</strong> and get the <strong>subscribe_id</strong> from the group configuration screen. The <strong>wsdl url</strong> can be found in the developers guide (<a href="https://docs.google.com/document/d/1lKJSEMT-731bWRIQsVnHL8sosQkqrx6rOI_VR6bWB5k/edit#heading=h.tnjtjhbffgks" target="_blank">hu</a> / <a href="https://docs.google.com/document/d/1vPCd8_DrPGC1GYHEy6zyNFKy7ymYVjmj5wzUqYd30ds/edit#heading=h.2et92p0" target="_blank">en</a>)', 'wp-fusion' )
+			'desc'	  => __( 'Before attempting to connect to Mailengine, you\'ll first need to enable Soap access. You can do this by requesting a <strong>client_id</strong> and get the <strong>subscribe_id</strong> from the group configuration screen. The <strong>wsdl url</strong> can be found in the developers guide (<a href="'.static::$docs['hu'].'" target="_blank">hu</a> / <a href="'.static::$docs['en'].'" target="_blank">en</a>)', 'wp-fusion' )
 		);
 
 		$new_settings['mailengine_wsdl_url'] = array(
@@ -133,7 +140,7 @@ class WPF_Mailengine_Admin {
 			'std'     => 0,
 			'type'    => 'heading',
 			'section' => 'setup',
-			'desc'	  => __( '<ul><li><a href="https://docs.google.com/document/d/1lKJSEMT-731bWRIQsVnHL8sosQkqrx6rOI_VR6bWB5k/edit#heading=h.tnjtjhbffgks" target="_blank">Hungarian</a></li><li><a href="https://docs.google.com/document/d/1vPCd8_DrPGC1GYHEy6zyNFKy7ymYVjmj5wzUqYd30ds/edit#heading=h.2et92p0" target="_blank">English</a></li></ul>', 'wp-fusion' )
+			'desc'	  => __( '<ul><li><a href="'.static::$docs['hu'].'" target="_blank">Hungarian</a></li><li><a href="'.static::$docs['en'].'" target="_blank">English</a></li></ul>', 'wp-fusion' )
 		);
 
 		$settings = wp_fusion()->settings->insert_setting_after( 'crm', $settings, $new_settings );
@@ -178,6 +185,87 @@ class WPF_Mailengine_Admin {
 		echo '<table class="form-table">';
 
 	}
+
+	/**
+	 * Loads standard mailengine field names and attempts to match them up with standard local ones
+	 *
+	 * @access  public
+	 * @since   1.0
+	 */
+
+	public function add_default_fields( $options ) {
+
+		if ( $options['connection_configured'] == true && empty( $options['contact_fields']['user_email']['crm_field'] ) ) {
+			$options['contact_fields']['user_email']['crm_field'] = 'email';
+		}
+
+		return $options;
+
+	}
+
+	/**
+	 * Loads Mautic specific settings fields
+	 *
+	 * @access  public
+	 * @since   1.0
+	 */
+
+	public function register_settings( $settings, $options ) {
+
+		// Add site tracking option
+		$mailengine_main_settings = array();
+
+		$mailengine_main_settings['mailengine_configuration'] = array(
+			'title'   => __( 'Mailengine Configuration', 'wp-fusion' ),
+			'desc'    => '',
+			'std'     => '',
+			'type'    => 'heading',
+			'section' => 'main'
+		);
+
+		$mailengine_main_settings['affiliate'] = array(
+			'title'   => __( 'Affiliate', 'wp-fusion' ),
+			'desc'    => __( 'Affiliate ID determines whether users\'s data can be overwritten in Mailengine. Only <strong>trusted affiliates</strong> can overwrite data. Read further details in the docs (<a href="'.static::$docs['hu'].'" target="_blank">hu</a> / <a href="'.static::$docs['en'].'" target="_blank">en</a>).', 'wp-fusion' ),
+			'std'     => 0,
+			'type'    => 'number',
+			'section' => 'main'
+		);
+
+		$mailengine_main_settings['hidden_subscribe'] = array(
+			'title'   => __( 'Hidden subscribe', 'wp-fusion' ),
+			'desc'    => __( 'Hidden subscription is a simple opt-in subscription (<i>recommended</i>). <br />If hidden subscribe is not checked, the subscription behaves as double opt-in. Read further details in the docs (<a href="'.static::$docs['hu'].'" target="_blank">hu</a> / <a href="'.static::$docs['en'].'" target="_blank">en</a>).', 'wp-fusion' ),
+			'std'     => 1,
+			'type'    => 'checkbox',
+			'section' => 'main',			
+		);
+
+		$settings = wp_fusion()->settings->insert_setting_after( 'profile_update_tags', $settings, $mailengine_main_settings );
+
+
+		$mailengine_import_settings = array();
+
+		$mailengine_import_settings['mailengine_import_configuration'] = array(
+			'title'   => __( 'Mailengine Configuration', 'wp-fusion' ),
+			'desc'    => '',
+			'std'     => '',
+			'type'    => 'heading',
+			'section' => 'import'
+		);
+
+		$mailengine_import_settings['activate_unsubscribed'] = array(
+			'title'   => __( 'Activate Unsubscribed users', 'wp-fusion' ),
+			'desc'    => __( 'Reactivate users in the Mailengine who previously unsubscribed. Read further details in the docs (<a href="'.static::$docs['hu'].'" target="_blank">hu</a> / <a href="'.static::$docs['en'].'" target="_blank">en</a>)', 'wp-fusion' ),
+			'std'     => 0,
+			'type'    => 'checkbox',
+			'section' => 'import'
+		);
+
+		$settings = wp_fusion()->settings->insert_setting_after( 'email_notifications', $settings, $mailengine_import_settings );
+
+		return $settings;
+
+	}
+
 
 	/**
 	 * Verify connection credentials
