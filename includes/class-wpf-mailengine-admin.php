@@ -223,7 +223,7 @@ class WPF_Mailengine_Admin {
 			'section' => 'main'
 		);
 
-		$mailengine_main_settings['affiliate'] = array(
+		$mailengine_main_settings['mailengine_affiliate'] = array(
 			'title'   => __( 'Affiliate', 'wp-fusion' ),
 			'desc'    => __( 'Affiliate ID determines whether users\'s data can be overwritten in Mailengine. Only <strong>trusted affiliates</strong> can overwrite data. Read further details in the docs (<a href="'.static::$docs['hu'].'" target="_blank">hu</a> / <a href="'.static::$docs['en'].'" target="_blank">en</a>).', 'wp-fusion' ),
 			'std'     => 0,
@@ -231,7 +231,7 @@ class WPF_Mailengine_Admin {
 			'section' => 'main'
 		);
 
-		$mailengine_main_settings['hidden_subscribe'] = array(
+		$mailengine_main_settings['mailengine_hidden_subscribe'] = array(
 			'title'   => __( 'Hidden subscribe', 'wp-fusion' ),
 			'desc'    => __( 'Hidden subscription is a simple opt-in subscription (<i>recommended</i>). <br />If hidden subscribe is not checked, the subscription behaves as double opt-in. Read further details in the docs (<a href="'.static::$docs['hu'].'" target="_blank">hu</a> / <a href="'.static::$docs['en'].'" target="_blank">en</a>).', 'wp-fusion' ),
 			'std'     => 1,
@@ -252,7 +252,7 @@ class WPF_Mailengine_Admin {
 			'section' => 'import'
 		);
 
-		$mailengine_import_settings['activate_unsubscribed'] = array(
+		$mailengine_import_settings['mailengine_activate_unsubscribed'] = array(
 			'title'   => __( 'Activate Unsubscribed users', 'wp-fusion' ),
 			'desc'    => __( 'Reactivate users in the Mailengine who previously unsubscribed. Read further details in the docs (<a href="'.static::$docs['hu'].'" target="_blank">hu</a> / <a href="'.static::$docs['en'].'" target="_blank">en</a>)', 'wp-fusion' ),
 			'std'     => 0,

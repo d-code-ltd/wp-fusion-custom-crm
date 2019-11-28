@@ -21,6 +21,12 @@ class WPF_Mailengine {
 	public $subscribe_service;
 
 	/**
+	 * Bypass the field filtering in WPF_CRM_Base so multiselects get passed as arrays
+	 */
+
+	public $override_filters;
+
+	/**
 	 * Get things started
 	 *
 	 * @access  public
@@ -31,7 +37,9 @@ class WPF_Mailengine {
 
 		$this->slug     = 'mailengine';
 		$this->name     = 'Mailengine';
-		$this->supports = array('combined_updates');
+		$this->supports = array();
+
+		$this->override_filters = true;
 
 		// Set up admin options
 		if ( is_admin() ) {
@@ -48,9 +56,7 @@ class WPF_Mailengine {
 	 */
 
 	public function init() {
-
-		// add_filter( 'wpf_format_field_value', array( $this, 'format_field_value' ), 10, 3 );
-
+		add_filter( 'wpf_format_field_value', array( $this, 'format_field_value' ), 10, 3 );
 	}
 
 
@@ -68,19 +74,21 @@ class WPF_Mailengine {
 			$wsdl_url = wp_fusion()->settings->get( 'mailengine_wsdl_url' );
 			$client_id = wp_fusion()->settings->get( 'mailengine_client_id' );
 			$subscribe_id = wp_fusion()->settings->get( 'mailengine_subscribe_id' );
+			$affiliate = wp_fusion()->settings->get( 'mailengine_affiliate' );
 		}
 
 		
 		$this->subscribe_service = new \SoapClient($wsdl_url, [
-			'cache_wsdl' => WSDL_CACHE_NONE,
-			'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP | 9,
-			'exceptions' => false
+			'cache_wsdl' 	=> WSDL_CACHE_NONE,
+			'compression' 	=> SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP | 9,
+			'exceptions' 	=> false
 		]);
 		
 		$this->params = array(
-			'wsdl_url' => $wsdl_url,
-			'client_id' => $client_id,
-			'subscribe_id' => $subscribe_id
+			'wsdl_url' 		=> $wsdl_url,
+			'client_id' 	=> $client_id,
+			'subscribe_id' 	=> $subscribe_id,
+			'affiliate'		=> $affiliate
 		);
 
 
@@ -196,17 +204,25 @@ class WPF_Mailengine {
 		}
 		
 		$crm_fields = array();
+		$crm_fields_multiselect_mapping = array();
 
 		$result = $this->subscribe_service->GetMetaDataUserFields($this->params['client_id'], $this->params['subscribe_id']);
 
 		if (is_soap_fault($result)) {
 			return new WP_Error( $result->faultcode, "SOAP Fault: (faultcode: {$result->faultcode}, faultstring: {$result->faultstring})" );		    
-		}
+		}		
 
 		if (is_array($result)){
 			if(!empty($result)) {
 				foreach($result as $field_id => $field) {
-					$crm_fields[ $field['variable_name'] ] = $field['variable_name']." (".$field['question'].")";
+					$crm_fields[ $field['variable_name'] ] = $field['variable_name']." (".$field['question'].")";					
+					if (!empty($field['values'])){
+						$crm_fields_multiselect_mapping[$field['variable_name']] = array();
+						foreach ($field['values'] as $value_id => $multiselect_value){
+							$crm_fields_multiselect_mapping[$field['variable_name']][mb_strtolower($multiselect_value['enum_option'])] = $value_id;							
+						}
+						
+					}
 				}
 			}
 		}else{
@@ -214,7 +230,8 @@ class WPF_Mailengine {
 		}
 
 		asort( $crm_fields );	
-		wp_fusion()->settings->set( 'crm_fields', $crm_fields );
+		wp_fusion()->settings->set( 'crm_fields', $crm_fields );				
+		wp_fusion()->settings->set( 'crm_fields_multiselect_mapping', $crm_fields_multiselect_mapping );
 
 		return $crm_fields;
 	}
@@ -284,6 +301,7 @@ class WPF_Mailengine {
 			return new WP_Error($result, "SOAP warning! The Soap request was done, but returned with the following error: {$result}" );		    	
 		}
 
+
 		$found_new = false;
 		$available_tags = wp_fusion()->settings->get('available_tags');
 
@@ -312,23 +330,31 @@ class WPF_Mailengine {
 	 */
 
 	public function apply_tags( $tags, $contact_id ) {
-/*
 		if ( ! $this->params ) {
 			$this->get_params();
 		}
 
-		$request 		= $this->url . '/endpoint/';
-		$params 		= $this->params;
-		$params['body'] = $tags;
-
-		$response = wp_remote_post( $request, $params );
-
-		if( is_wp_error( $response ) ) {
-			return $response;
+		if (empty($tags)){
+			return true;
 		}
 
-		return true;
-*/
+
+		$userdata = array(
+			array('id',$contact_id),
+			array('activate-unsubscribed','no'),			
+		);
+
+		$result = $this->subscribe_service->Subscribe($this->params['client_id'], $this->params['subscribe_id'], 'id', 'yes', intval($this->params['affiliate']), array(), $userdata, $tags);
+		
+		if (is_soap_fault($result)) {
+			return new WP_Error( $result->faultcode, "SOAP Fault: (faultcode: {$result->faultcode}, faultstring: {$result->faultstring})" );		    
+		}
+
+		if ($result == 'success'){
+			return true;
+		}else{
+			return new WP_Error($result, "SOAP warning! The Soap request was done, but returned with the following error: {$result}" );		  
+		}
 	}
 
 	/**
@@ -339,23 +365,111 @@ class WPF_Mailengine {
 	 */
 
 	public function remove_tags( $tags, $contact_id ) {
-/*
 		if ( ! $this->params ) {
 			$this->get_params();
 		}
 
-		$request 		= $this->url . '/endpoint/';
-		$params 		= $this->params;
-		$params['body'] = $tags;
-
-		$response = wp_remote_post( $request, $params );
-
-		if( is_wp_error( $response ) ) {
-			return $response;
+		if (empty($tags)){
+			return true;
 		}
 
-		return true;
-*/
+		// Prefix with - sign for removal
+		foreach( $tags as $i => $tag ) {
+			$tags[$i] = '-' . $tag;
+		}
+
+		$userdata = array(
+			array('id',$contact_id),
+			array('activate-unsubscribed','no'),			
+		);
+
+		$result = $this->subscribe_service->Subscribe($this->params['client_id'], $this->params['subscribe_id'], 'id', 'yes', intval($this->params['affiliate']), array(), $userdata, $tags);
+		
+		if (is_soap_fault($result)) {
+			return new WP_Error( $result->faultcode, "SOAP Fault: (faultcode: {$result->faultcode}, faultstring: {$result->faultstring})" );		    
+		}
+
+		if ($result == 'success'){
+			return true;
+		}else{
+			return new WP_Error($result, "SOAP warning! The Soap request was done, but returned with the following error: {$result}" );		  
+		}
+	}
+
+
+	/**
+	 * Formats user entered data to match Mautic field formats
+	 *
+	 * @access public
+	 * @return mixed
+	 */
+
+	public function format_field_value( $value, $field_type, $field ) {
+		$crm_fields_multiselect_mapping = wp_fusion()->settings->get( 'crm_fields_multiselect_mapping');
+		
+		if ( $field_type == 'datepicker' || $field_type == 'date' ) {
+			if (!empty($value)){
+				if (is_numeric($value)){					
+					if ($value == date('Ymd', strtotime($value))){
+						return date('Y-m-d', strtotime($value));
+					}else{
+						$date = strtotime( $value );
+						return $date;
+					}
+				}else{
+					return date( "Y-m-d", $value );
+				}
+			}else{
+				return $value;
+			}
+		} elseif ( false !== strpos( $field, 'add_tag_' ) ) {
+
+			// Don't modify it if it's a dynamic tag field
+			return $value;
+
+		} elseif((is_array($value) || $field_type == 'multiselect') && isset($crm_fields_multiselect_mapping[$field])) {			
+			if (is_array($value)){
+				$new_value = array();
+				foreach ($value as $i => $val){
+					if (isset($crm_fields_multiselect_mapping[$field][mb_strtolower($val)])){
+						$new_value[$i] = $crm_fields_multiselect_mapping[$field][mb_strtolower($val)];
+					}else{
+						wp_fusion()->logger->handle( 'warning', 0, 'Multiselect value mapping for CRM field <strong>'.$field.'</strong> value <strong>"'.$value.'"</strong> is missing a mapping.');
+						$new_value[$i] = $val;
+					}
+				}
+			}else{
+				if (isset($crm_fields_multiselect_mapping[$field][mb_strtolower($value)])){
+					$new_value = $crm_fields_multiselect_mapping[$field][mb_strtolower($value)];
+				}else{
+					wp_fusion()->logger->handle( 'warning', 0, 'Multiselect value mapping for CRM field <strong>'.$field.'</strong> value <strong>"'.$value.'"</strong> is missing a mapping.');
+					$new_value = $value;
+				}
+			}
+
+			return $new_value;
+		} elseif ( $field_type == 'checkbox' || $field_type == 'checkbox-full' ) {
+
+			if ( empty( $value ) ) {
+				//If checkbox is unselected
+				return null;
+			} else {
+				// If checkbox is selected
+				return 1;
+			}
+		
+		} elseif ( $field == 'user_pass' ) {
+
+			// Don't update password if it's empty
+			if ( ! empty( $value ) ) {
+				return $value;
+			}
+
+		} else {
+
+			return $value;
+
+		}
 	}
 
 
@@ -366,8 +480,7 @@ class WPF_Mailengine {
 	 * @return int Contact ID
 	 */
 
-	public function add_contact( $contact_data, $map_meta_fields = true ) {
-/*
+	public function add_contact( $contact_data, $map_meta_fields = true ) {		
 		if ( ! $this->params ) {
 			$this->get_params();
 		}
@@ -375,23 +488,37 @@ class WPF_Mailengine {
 		if ( $map_meta_fields == true ) {
 			$contact_data = wp_fusion()->crm_base->map_meta_fields( $contact_data );
 		}
-
-		$request 		= $this->url . '/endpoint/';
-		$params 		= $this->params;
-		$params['body'] = $contact_data;
-
-		$response = wp_remote_post( $request, $params );
-
-		if( is_wp_error( $response ) ) {
-			return $response;
+		
+		$userdata = array(			
+			array('activate-unsubscribed','no'),			
+		);
+		foreach ($contact_data as $field => $value ){
+			if (is_array($value)){
+				foreach ($value as $val){
+					$userdata[]	= array($field, $val);
+				}
+			}else{
+				$userdata[]	= array($field, $value);
+			}
 		}
 
-		$body = json_decode( wp_remote_retrieve_body( $response ) );
+		$result = $this->subscribe_service->Subscribe($this->params['client_id'], $this->params['subscribe_id'], 'email', (wp_fusion()->settings->get( 'mailengine_hidden_subscribe' )?'yes':'no'), intval($this->params['affiliate']), array(), $userdata, array());
+		
+		if (is_soap_fault($result)) {
+			return new WP_Error( $result->faultcode, "SOAP Fault: (faultcode: {$result->faultcode}, faultstring: {$result->faultstring})" );		    
+		}
 
-		// Get new contact ID out of response
+		if ($result == 'success'){
+			$contact_id = $this->get_contact_id( $contact_data['email'] );
+			if (!empty($contact_id)){
+				return $contact_id;
+			}else{
+				return new WP_Error($result, "SOAP warning! The Soap <strong>Subscribe</strong> request was performed successfully, but no contact was found by <strong>" . $contact_data['email'] . "</strong>" );		
+			}
+		}else{
+			return new WP_Error($result, "SOAP warning! The Soap request was done, but returned with the following error: {$result}" );		  
+		}
 
-		return $contact_id;
-*/
 	}
 
 	/**
@@ -402,7 +529,6 @@ class WPF_Mailengine {
 	 */
 
 	public function update_contact( $contact_id, $contact_data, $map_meta_fields = true ) {
-/*
 		if ( ! $this->params ) {
 			$this->get_params();
 		}
@@ -411,18 +537,31 @@ class WPF_Mailengine {
 			$contact_data = wp_fusion()->crm_base->map_meta_fields( $contact_data );
 		}
 
-		$request 		= $this->url . '/endpoint/';
-		$params 		= $this->params;
-		$params['body'] = $contact_data;
-
-		$response = wp_remote_post( $request, $params );
-
-		if( is_wp_error( $response ) ) {
-			return $response;
+		$userdata = array(
+			array('id',$contact_id),
+			array('activate-unsubscribed','no'),			
+		);
+		foreach ($contact_data as $field => $value ){
+			if (is_array($value)){
+				foreach ($value as $val){
+					$userdata[]	= array($field, $val);
+				}
+			}else{
+				$userdata[]	= array($field, $value);
+			}
 		}
 
-		return true;
-*/
+		$result = $this->subscribe_service->Subscribe($this->params['client_id'], $this->params['subscribe_id'], 'id', 'yes', intval($this->params['affiliate']), array(), $userdata, array());
+
+		if (is_soap_fault($result)) {
+			return new WP_Error( $result->faultcode, "SOAP Fault: (faultcode: {$result->faultcode}, faultstring: {$result->faultstring})" );		    
+		}
+
+		if ($result == 'success'){
+			return true;
+		}else{
+			return new WP_Error($result, "SOAP warning! The Soap request was done, but returned with the following error: {$result}" );		  
+		}
 	}
 
 	/**
