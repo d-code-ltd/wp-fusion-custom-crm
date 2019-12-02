@@ -239,28 +239,15 @@ class WPF_Mailengine_Admin {
 			'section' => 'main',			
 		);
 
-		$settings = wp_fusion()->settings->insert_setting_after( 'profile_update_tags', $settings, $mailengine_main_settings );
-
-
-		$mailengine_import_settings = array();
-
-		$mailengine_import_settings['mailengine_import_configuration'] = array(
-			'title'   => __( 'Mailengine Configuration', 'wp-fusion' ),
-			'desc'    => '',
-			'std'     => '',
-			'type'    => 'heading',
-			'section' => 'import'
-		);
-
-		$mailengine_import_settings['mailengine_activate_unsubscribed'] = array(
+		$mailengine_main_settings['mailengine_activate_unsubscribed'] = array(
 			'title'   => __( 'Activate Unsubscribed users', 'wp-fusion' ),
-			'desc'    => __( 'Reactivate users in the Mailengine who previously unsubscribed. Read further details in the docs (<a href="'.static::$docs['hu'].'" target="_blank">hu</a> / <a href="'.static::$docs['en'].'" target="_blank">en</a>)', 'wp-fusion' ),
-			'std'     => 0,
+			'desc'    => __( 'Reactivate newly registered users in the Mailengine who previously unsubscribed. Read further details in the docs (<a href="'.static::$docs['hu'].'" target="_blank">hu</a> / <a href="'.static::$docs['en'].'" target="_blank">en</a>)', 'wp-fusion' ),
+			'std'     => 1,
 			'type'    => 'checkbox',
-			'section' => 'import'
+			'section' => 'main'
 		);
 
-		$settings = wp_fusion()->settings->insert_setting_after( 'email_notifications', $settings, $mailengine_import_settings );
+		$settings = wp_fusion()->settings->insert_setting_after( 'profile_update_tags', $settings, $mailengine_main_settings );
 
 		return $settings;
 
