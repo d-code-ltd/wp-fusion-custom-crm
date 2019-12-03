@@ -7,8 +7,10 @@ This is a custom CRM extension for [WP Fusion](https://wpfusionplugin.com/) to c
 
 ## Features
 
-* Synchronize data via Soap connection
+* Synchronize data to MailEngine via Soap connection
 * Semi-bidirectional data sync (Pulling is available, but no webhook support)
+* leverage data of your Wordpress users and send personalized emails to them via Mailengine
+* check functions and features of [Mailengine](https://www.mailengine.hu/en/#functions)
 
 ## Getting Started
 
@@ -74,6 +76,8 @@ Adding the id of a **trusted affiliate** is required to override existing field 
 If *Hidden subscribe* option is set to true, Mailengine performs an opt-in subscription to the group. This means that the newly subscribed user won't receive a confirmation email. Defaults to "true".
 3. **Activate Unsubscribed users**
 If *Activate Unsubscribed users* is set to true, then newly registered users will be readded to your Mailengine group even if they were previously unsubscribed members of the same group. Defaults to "true".
+
+
 Otherwise follow the instructions that can be found in [setup guides and tutorials](https://wpfusion.com/documentation/) of standard WP Fusion documentation.
 
 
