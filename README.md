@@ -40,11 +40,13 @@ https://www.mailengine.hu/extranet/wsdl/api-basic-12.wsdl
 affiliate id sort'of identifies the Mailengine user who's sending the data to Mailengine. 
 The default behaviour of Mailengine data submission is adding and extending. By default only submitting to previously empty fields and adding new items to multiselect fields is allowed. In order to override existing data in a Mailengine group for a contact the affiliate must be be a **trusted affiliate** !
 
-#### setup
+
+#### Setup the CRM
 
 1. On the WP Fusion setup page pick **Mailengine** from the CRM list
 2. Type in **wsdl url**, **subscribe_id**, **client_id**
 3. Try the connection
+
 
 #### Guide to synchronizing fields
 
@@ -58,8 +60,11 @@ Mailengine internally stores select fields values by *key-label* pairs. However 
 > The *Advanced Custom Fields* plugin allows to set up select fields with key-label pairs.
 > The *Ultimate Member* plugin on the other hand does not.
 
+*WP Fusion lite only allows to synchronize basic Wordpress fields. Leveraging fields created by other plugins like Advanced Custom Fields or Ultimate Member requires WP Fusion.*
+
 Make sure you set the data type of every synchronized fields correctly. 
 restrictions to type (checkbox)
+
 
 #### Mailengine specific options in WP Fusion
 
@@ -70,6 +75,7 @@ If *Hidden subscribe* option is set to true, Mailengine performs an opt-in subsc
 3. **Activate Unsubscribed users**
 If *Activate Unsubscribed users* is set to true, then newly registered users will be readded to your Mailengine group even if they were previously unsubscribed members of the same group. Defaults to "true".
 Otherwise follow the instructions that can be found in [setup guides and tutorials](https://wpfusion.com/documentation/) of standard WP Fusion documentation.
+
 
 ## Mailengine documentation
 
