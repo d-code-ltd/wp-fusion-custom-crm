@@ -35,7 +35,7 @@ The *client_id* identifies you as a mailengine account. This is your secret api 
 2. **subscribe_id**
 The *subscribe_id* identifies your contact group in Mailengine. You may have access to more than one contact groups in Mailengine. 
 3. **wsdl url**
-https://www.mailengine.hu/extranet/wsdl/api-basic-12.wsdl
+https://www.mailengine.hu/extranet/wsdl/api-basic-13.wsdl
 4. **affiliate** (trusted affiliate id)
 affiliate id sort'of identifies the Mailengine user who's sending the data to Mailengine. 
 The default behaviour of Mailengine data submission is adding and extending. By default only submitting to previously empty fields and adding new items to multiselect fields is allowed. In order to override existing data in a Mailengine group for a contact the affiliate must be be a **trusted affiliate** !
