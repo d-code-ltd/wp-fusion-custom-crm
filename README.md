@@ -16,8 +16,8 @@ This is a custom CRM extension for [WP Fusion](https://wpfusionplugin.com/) to c
 
 ### Prerequisites
 
-Requires [WP Fusion](https://wpfusionplugin.com/)
-Requires [PHP SoapClient](https://www.php.net/manual/en/class.soapclient.php)
+- Requires [WP Fusion](https://wpfusionplugin.com/)
+- Requires [PHP SoapClient](https://www.php.net/manual/en/class.soapclient.php)
 
 ### Installing
 
