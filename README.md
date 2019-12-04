@@ -2,8 +2,8 @@
 
 > [Magyar leírás](README_hu.md)
 
-[Mailengine](https://www.mailengine.hu/en/) is a professional emailmarketing service.
-This is a custom CRM extension for [WP Fusion](https://wpfusionplugin.com/) to connect your Wordpress site with your [Mailengine](https://www.mailengine.hu/en/).
+[Mailengine](https://www.mailengine.hu/en/) is a easy-to-use, professional emailmarketing service.
+This is a custom CRM extension for [WP Fusion](https://wpfusionplugin.com/) to connect your Wordpress site with your [Mailengine](https://www.mailengine.hu/en/) and syncronize contact data via WP Fusion.
 
 ![Mailengine](https://www.mailengine.hu/images/me_logo_b.svg "Mailengine emailmarketing service")
 
@@ -11,7 +11,7 @@ This is a custom CRM extension for [WP Fusion](https://wpfusionplugin.com/) to c
 
 ## Features
 
-* Synchronize data to MailEngine via Soap connection
+* Synchronize data to MailEngine via secure Soap connection
 * Semi-bidirectional data sync (Pulling is available, but no webhook support)
 * leverage data of your Wordpress users and send personalized emails to them via Mailengine
 * check functions and features of [Mailengine](https://www.mailengine.hu/en/#functions)
@@ -27,7 +27,7 @@ This is a custom CRM extension for [WP Fusion](https://wpfusionplugin.com/) to c
 
 This plugin is an extension for WP Fusion. 
 - Install WP Fusion or WP Fusion Lite to your Wordpress site 
-- Then upload **Mailengine extension** for WP Fusion (this plugin) via plugin upload (zipped) or copy it directly to */wp-content/plugins/* directory.
+- Then upload **Mailengine CRM extension** for WP Fusion (this plugin) via plugin upload (zipped) or copy it directly to */wp-content/plugins/* directory.
 
 ### Setup
 
@@ -59,7 +59,7 @@ The default behaviour of Mailengine data submission is adding and extending. By 
 Synchronizing the **user_email** field is compulsory. 
 
 Mailengine doesn't have checkbox field type. Checkbox type of usage can be realized by *enum* (select) type of fields in Mailengine.
-Due to this, Mailengine is incompatible with checkbox type in Wordpress. Use a two-element select fields instead.
+Due to this, Mailengine is incompatible with checkbox type in Wordpress. Use a two-element select fields instead. Or you may try using a number type in Mailengine.
 
 Mailengine internally stores select fields values by *key-label* pairs. However this plugin syncronizes multi/select fields by label for better compatibility with other WP plugins. 
 
@@ -69,7 +69,6 @@ Mailengine internally stores select fields values by *key-label* pairs. However 
 *WP Fusion lite only allows to synchronize basic Wordpress fields. Leveraging fields created by other plugins like Advanced Custom Fields or Ultimate Member requires WP Fusion.*
 
 Make sure you set the data type of every synchronized fields correctly. 
-restrictions to type (checkbox)
 
 
 #### Mailengine specific options in WP Fusion
@@ -91,6 +90,7 @@ Otherwise follow the instructions that can be found in [setup guides and tutoria
 - [Fejlesztői útmutató - kiküldések - magyar](https://docs.google.com/document/d/17ErCFzyhDO0uQ0581SnZsiCxNh7ZdtckB3snZHw2lwA/edit#heading=h.mxo62uqdt2f3)
 - [developers guide - contacts - English](https://docs.google.com/document/d/1vPCd8_DrPGC1GYHEy6zyNFKy7ymYVjmj5wzUqYd30ds/edit#heading=h.xhfywkl8jbby)
 - [developers guide - messages - English](https://docs.google.com/document/d/1-bE9nNbik0ckN354bix6wH2zDZ9boFUGZV33ZWgWr8E/edit)
+- [Mailengine document store](https://www.mailengine.hu/en/document-library/)
 
 ## Authors
 
