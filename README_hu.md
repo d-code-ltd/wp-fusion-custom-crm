@@ -1,6 +1,6 @@
 # Mailengine CRM kiterjesztés a WP Fusion 
 
-> [English reacme](README.md)
+> [English readme](README.md)
 
 A [Mailengine](https://www.mailengine.hu/hu/) egy könnyen használható, sokoldalú e-mail küldő szoftver.
 Ez a repo egy egyedi CRM kiterjesztést tartalmaz a [WP Fusion](https://wpfusionplugin.com/) nevű Wordpress pluginhoz, ami lehetővé teszi, hogy összekösd a Wordpress oldalad a [Mailengine](https://www.mailengine.hu/en/) emailküldővel és szinkronizáld a feliratkozókat a rendszerek között.
