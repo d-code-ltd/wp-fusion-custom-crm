@@ -1,5 +1,5 @@
-=== WP Fusion - Custom CRM ===
-Contributors: verygoodplugins
+=== WP Fusion - Mailengine CRM ===
+Contributors: d-code
 Tags:
 Requires at least: 4.0
 Tested up to: 4.9.3

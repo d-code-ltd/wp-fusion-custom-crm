@@ -1,12 +1,12 @@
 <?php
 
 /*
-Plugin Name: WP Fusion - Custom CRM
-Description: Boostrap for connecting WP Fusion to a custom CRM
-Plugin URI: https://verygoodplugins.com/
+Plugin Name: WP Fusion - Mailengine CRM
+Description: Mailengine CRM for WP Fusion based on "Boostrap for connecting WP Fusion to a custom CRM"
+Plugin URI: https://github.com/d-code-ltd/wp-fusion-extension-mailengine-crm
 Version: 1.0
-Author: Very Good Plugins
-Author URI: https://verygoodplugins.com/
+Author: d-code ltd
+Author URI: https://www.d-code.hu/
 */
 
 /**
@@ -36,21 +36,19 @@ if(!function_exists('add_action')) {
 }
 
 
-if ( ! class_exists( 'WPF_Custom' ) ) {
-	include_once dirname( __FILE__ ) . '/includes/class-wpf-custom.php';
+if ( ! class_exists( 'WPF_Mailengine' ) ) {
+	include_once dirname( __FILE__ ) . '/includes/class-wpf-mailengine.php';
 }
 
 /**
- * Add our custom CRM class to the list of registered CRMs
+ * Add our mailengine CRM class to the list of registered CRMs
  *
  * @return  array CRMs
  */
 
-function wpf_custom_crm( $crms ) {
-
-	$crms['custom'] = 'WPF_Custom';
+function wpf_mailengine_crm( $crms ) {	
+	$crms['mailengine'] = 'WPF_Mailengine';		
 	return $crms;
-
 }
 
-add_filter( 'wpf_crms', 'wpf_custom_crm' );
+add_filter( 'wpf_crms', 'wpf_mailengine_crm');
