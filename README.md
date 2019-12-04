@@ -5,9 +5,7 @@ This is a custom CRM extension for [WP Fusion](https://wpfusionplugin.com/) to c
 
 ![Mailengine](https://www.mailengine.hu/images/me_logo_b.svg "Mailengine emailmarketing service")
 
-```
-	[Magyar leírás](README_hu.md)
-```
+> [Magyar leírás](README_hu.md)
 
 ## Features
 
