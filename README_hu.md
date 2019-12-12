@@ -7,11 +7,12 @@ Ez a repo egy egyedi CRM kiterjesztést tartalmaz a [WP Fusion](https://wpfusion
 
 ![MailEngine](https://www.mailengine.hu/images/me_logo_b.svg "MailEngine emailmarketing szolgáltatás")
 
-
 ## Jellemzők
 
-* Felhasználói adatok szinkronizálása a MailEngine felé biztonságos soap kapcsolaton keresztül.
-* Kvázi-kétirányú adatszinkronizáció lehetősége (Adatok lekérése a MailEngine-ből lehetséges, de a webhookok nem támogatottak).
+* Felhasználói adatok szinkronizálása a MailEngine felé biztonságos SOAP kapcsolaton keresztül.
+* Kvázi-kétirányú adatszinkronizáció lehetősége (Adatok lekérése a MailEngine-ből lehetséges, de a webhookok nem támogatottak). Alapvető kétirányú szinkron működik WordPress események által indukálva (a WP Fusion plugin-en keresztül) de nem működnek a direkt MailEngine eseményeből adódóan.
+
+  (Bármilyen a MailEngine-ben történő direkt adatváltozás nem szinkronizálódik a WordPress-be automatikusan (még).)
 * Használd előnyödre a felhasználóid adatait és küldj számukra személyre szabott leveleket a MailEngine rendszerben.
 * Nézd át a [MailEngine](https://www.mailengine.hu/#funkciok) képességeit és jellemzőit.
 
@@ -32,7 +33,7 @@ Ez a plugin egy kiterjesztés a WP Fusionhöz.
 
 #### Szükséges kulcsok megszerzése a MailEngine-től
 
-Ha már van MailEngine fiókod, lép kapcsolatba a [supporttal](https://www.mailengine.hu/en/#contact), hogy hozzáférj a MailEngine soap kapcsolatának használatához szükséges kulcsokhoz.
+Ha már van MailEngine fiókod, lép kapcsolatba a [supporttal](https://www.mailengine.hu/en/#contact), hogy hozzáférj a MailEngine SOAP kapcsolatának használatához szükséges kulcsokhoz.
 Az alábbi adatokra lesz szükséged:
 
 1. **client_id**
@@ -41,8 +42,8 @@ A *client_id* azonosítja téged, mint egy MailEngine fiók. Ez egy titkos api k
 A *subscribe_id* azonosítja az adatbázisodat a MailEngineben. Akár több adatbázisod is lehet a Meilangine-ben.
 3. **wsdl url**
 https://www.mailengine.hu/extranet/wsdl/api-basic-13.wsdl
-4. **affiliate** (trusted affiliate id)
-Az affliate azonosító azt azonosítja, hogy úgymond "ki küldi be" az aatokat a MailEngine-be.
+4. **affiliate** (trusted affiliate ID)
+Az affliate azonosító azt azonosítja az adat forrását legfőképpen pénzügyi elszámolás szempontjából. Az a 'személy', aki az adatot hozta. Ez az ID technikailag egy MailEngine felhasználó, aki a 'technikai tulajdonosa' a kapcsolódó adatnak (nem jogosultság kezelés miatt, sokkal inkább pénzügyi szempontból).
 A MailEngine alapértelmezett működése olyan, hogy a beküldött felhasználói adatokkal a már tárolt adatokat csak kiegészíteni lehet: korábban ki nem töltött mezők értékét lehet hozzáadni, vagy többértékes mezők esetén elemeket hozáadni. Annak érdekében, hogy meglevő adatokat felül lehessen írni szükséges egy úgynevezett megbízható minősítéssel rendelkező adatfrissítő, vagyis **trusted affiliate** azonosító.
 
 #### A CRM Beállítása
@@ -51,13 +52,12 @@ A MailEngine alapértelmezett működése olyan, hogy a beküldött felhasznál�
 2. Add meg a  **wsdl url**, **subscribe_id**, **client_id** adatokat!
 3. Teszteld a kapcsolatot!
 
-
 #### Útmutató a mezők szinkronizációjához
 
 A **user_email** mező szinkronizálása kötelező.
 
-A MailEngine-ben sajnos nincs checkbox típusú mező. Checkbox típusú felhasználása az *enum* mezőtípus használható a MailEngineben.
-Emiatt a MailEngine nem kompatibilis a WordPressben létrehozott checkbox típusú mezővel. Ehelyett a WordPressben kételemű select típusú mezők használata javallott, vagy esetleg meg lehet próbálni a MailEngine-ben szám típusú mezőben tárolni a checkbox értékeket.
+**A MailEngine-ben sajnos nincs _checkbox_ típusú mező.** (A WP Fusion rendelkezik diszkrét _checkbox_ mező típussal a boolean típusú változók használatához. A _boolean_ változók speciális lista változók összesen két, 'igaz'/'hamis' vagy 'igen'/'nem' értékkel, '0' vagy '1'-ként ábrázolva.) Checkbox típusú felhasználása az *enum* mezőtípus használható a MailEngineben.
+Emiatt a MailEngine nem kompatibilis a WordPressben létrehozott _checkbox_ típusú mezővel. Ehelyett a WordPressben kételemű _select_ típusú mezők használata javallott, vagy esetleg meg lehet próbálni a MailEngine-ben szám típusú mezőben tárolni a _checkbox_ értékeket.
 
 A MailEngine a háttérrendszerben a *select* típusú mezők értékét *kulcs-szöveg* párokként tárolja. Azonban ez a plugin a select/multiselect típusú mezők értékét más WordPress pluginokkal való magasabb fokú kompatibilitás érdekében szöveg formájukban szinkronizálja. 
 
@@ -82,7 +82,6 @@ Ha az *Activate Unsubscribed users* kapcsoló igaz, akkor az újonnan regisztrá
 
 Más tekintetében hasznos átnézni és praktikus követni a WP fusion dokumentációjában található beállításokra vonatkozó [útmutatókat és javaslatokat](https://wpfusion.com/documentation/).
 
-
 ## MailEngine dokumentáció
 
 - [Fejlesztői útmutató - tagok - magyar](https://docs.google.com/document/d/1lKJSEMT-731bWRIQsVnHL8sosQkqrx6rOI_VR6bWB5k/edit#heading=h.tnjtjhbffgks)
@@ -98,4 +97,4 @@ Más tekintetében hasznos átnézni és praktikus követni a WP fusion dokument
 
 ## License
 
-This project is licensed under the GPL License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the GPL License - see the [LICENSE.md](LICENSE.md) file for details.
