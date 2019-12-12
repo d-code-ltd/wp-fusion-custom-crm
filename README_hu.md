@@ -74,11 +74,11 @@ Make sure you set the data type of every synchronized fields correctly.
 #### MailEngine beállítások a WP Fusionben
 
 1. **Affiliate**
-**trusted affiliate** megadása szükséges ahhoz, hogy a felhasználók MailEngine-ben tárolt értékeit a WordPress oldalról felül lehessen bírálni. Ez az érték alapértelmezetten "0".
+**trusted affiliate** megadása szükséges ahhoz, hogy a felhasználók MailEngine-ben tárolt értékeit a WordPress oldalról felül lehessen bírálni. Ez az érték alapértelmezetten '0'.
 2. **Hidden subscribe**
-Ha a *Hidden subscribe* kapcsoló igaz, akkor a MailEngine egy olyan feliratást hajt végre az adatbázisban, ami nem igényel megerősítést. Ez azt jelenti, hogy az újonnan regisztrált felhasználók egyből bekerülnek a MailEngine adatbázisba is, nem fognak megerősítő emailt kapni. Ez a beállítás alapértelmezetten "igaz".
+Ha a *Hidden subscribe* kapcsoló igaz, akkor a MailEngine egy olyan feliratást hajt végre az adatbázisban, ami nem igényel megerősítést. Ez azt jelenti, hogy az újonnan regisztrált felhasználók egyből bekerülnek a MailEngine adatbázisba is, nem fognak megerősítő emailt kapni. Ez a beállítás alapértelmezetten 'igaz'.
 3. **Activate Unsubscribed users**
-Ha az *Activate Unsubscribed users* kapcsoló igaz, akkor az újonnan regisztrált felhasználók újra bekerülnek a MailEngine adatbázisba, amennyiben azt megelőezően már tagok voltak ott és leiratkoztak. Ez a beállítás alapértelmezetten "igaz".
+Ha az *Activate Unsubscribed users* kapcsoló igaz, akkor az újonnan regisztrált felhasználók újra bekerülnek a MailEngine adatbázisba, amennyiben azt megelőezően már tagok voltak ott és leiratkoztak. Ez a beállítás alapértelmezetten 'igaz'.
 
 Más tekintetében hasznos átnézni és praktikus követni a WP fusion dokumentációjában található beállításokra vonatkozó [útmutatókat és javaslatokat](https://wpfusion.com/documentation/).
 
