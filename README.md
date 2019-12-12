@@ -80,7 +80,7 @@ If *Activate Unsubscribed users* is set to true, then newly registered users wil
 
 Otherwise follow the instructions that can be found in [setup guides and tutorials](https://wpfusion.com/documentation/) of standard WP Fusion documentation.
 
-## MailEngine documentation
+## MailEngine API documentation
 
 - [Contacts - Developer's guide - English](https://docs.google.com/document/d/1vPCd8_DrPGC1GYHEy6zyNFKy7ymYVjmj5wzUqYd30ds/edit#heading=h.xhfywkl8jbby)
 - [Messages - Developer's guide - English](https://docs.google.com/document/d/1-bE9nNbik0ckN354bix6wH2zDZ9boFUGZV33ZWgWr8E/edit)
