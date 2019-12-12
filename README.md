@@ -82,10 +82,10 @@ Otherwise follow the instructions that can be found in [setup guides and tutoria
 
 ## MailEngine documentation
 
-- [Fejlesztői útmutató - tagok - magyar](https://docs.google.com/document/d/1lKJSEMT-731bWRIQsVnHL8sosQkqrx6rOI_VR6bWB5k/edit#heading=h.tnjtjhbffgks)
-- [Fejlesztői útmutató - kiküldések - magyar](https://docs.google.com/document/d/17ErCFzyhDO0uQ0581SnZsiCxNh7ZdtckB3snZHw2lwA/edit#heading=h.mxo62uqdt2f3)
-- [developers guide - contacts - English](https://docs.google.com/document/d/1vPCd8_DrPGC1GYHEy6zyNFKy7ymYVjmj5wzUqYd30ds/edit#heading=h.xhfywkl8jbby)
-- [developers guide - messages - English](https://docs.google.com/document/d/1-bE9nNbik0ckN354bix6wH2zDZ9boFUGZV33ZWgWr8E/edit)
+- [Contacts - Developer's guide - English](https://docs.google.com/document/d/1vPCd8_DrPGC1GYHEy6zyNFKy7ymYVjmj5wzUqYd30ds/edit#heading=h.xhfywkl8jbby)
+- [Messages - Developer's guide - English](https://docs.google.com/document/d/1-bE9nNbik0ckN354bix6wH2zDZ9boFUGZV33ZWgWr8E/edit)
+- [Elhasználók - Fejlesztői útmutató - Magyar](https://docs.google.com/document/d/1lKJSEMT-731bWRIQsVnHL8sosQkqrx6rOI_VR6bWB5k/edit#heading=h.tnjtjhbffgks)
+- [Üzenetek - Fejlesztői útmutató - Magyar](https://docs.google.com/document/d/17ErCFzyhDO0uQ0581SnZsiCxNh7ZdtckB3snZHw2lwA/edit#heading=h.mxo62uqdt2f3)
 - [MailEngine document store](https://www.mailengine.hu/en/document-library/)
 
 ## Authors
