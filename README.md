@@ -12,7 +12,7 @@ This is a custom CRM extension for [WP Fusion](https://wpfusionplugin.com/) to c
 * Synchronize data to MailEngine via secure Soap connection.
 * Semi-bidirectional data sync (Pulling is available, but no webhook support). Basically bidirectional sync working triggered by WordPress event (through WP Fusion) but not working directly triggered by MailEngine event.
    
-  _(Any data change directly in MailEngine not (yet) synchronizing into WordPress automatically.)_
+  (Any data change directly in MailEngine not (yet) synchronizing into WordPress automatically.)
 * Leverage data of your WordPress users and send personalized emails to them via MailEngine
 * Check functions and features of [MailEngine](https://www.mailengine.hu/en/#functions)
 
@@ -43,7 +43,7 @@ The *subscribe_id* identifies your contact group in MailEngine. You may have acc
 3. **wsdl url**
 https://www.mailengine.hu/extranet/wsdl/api-basic-13.wsdl
 4. **affiliate** (trusted affiliate ID)
-Affiliate ID sort'of identifies of the data source from financial aspect. The 'person' who had brings the data. This ID is technically a MailEngine user who's the technically owner of the corresponding data _(not for authorization goals but for statistics)_. 
+Affiliate ID sort'of identifies of the data source mainly from financial aspect. The 'person' who had brings the data. This ID is technically a MailEngine user who's the technically owner of the corresponding data (not for authorization goals but for statistics). 
 The default behaviour of MailEngine data submission is adding and extending. By default only submitting to previously empty fields and adding new items to multiselect fields is allowed. In order to override existing data in a MailEngine group for a contact the affiliate must be be a **trusted affiliate**!
 
 
@@ -58,8 +58,8 @@ The default behaviour of MailEngine data submission is adding and extending. By 
 
 Synchronizing the **user_email** field is compulsory. 
 
-**MailEngine doesn't have dedicated _checkbox_ field type.** _(There is a discrete `checkbox` field type in WP Fusion to use with boolean type of variables. Boolean variables are special enum variables with just 2 values, 'true'/'false' or 'yes'/'no' represented by '0' or '1'.)_ Checkbox type of usage can be realized by *enum* (select) type of fields in MailEngine.
-Due to this, MailEngine is incompatible with _checkbox_ type in WordPress. In case of requirement please use a two-element select fields instead. Or you may try using a number type in MailEngine.
+**MailEngine doesn't have dedicated _checkbox_ field type.** (There is a discrete _checkbox_ field type in WP Fusion to use with boolean type of variables. Boolean variables are special enum variables with just 2 values, 'true'/'false' or 'yes'/'no' represented by '0' or '1'.) Checkbox type of usage can be realized by *enum* (select) type of fields in MailEngine.
+Due to this, MailEngine is incompatible with _checkbox_ type in WordPress. In case of requirement please use a two-element select fields instead or you may try using a number type in MailEngine.
 
 MailEngine internally stores select fields values by *key-label* pairs. However this plugin syncronizes multi/select fields by label for better compatibility with other WP plugins. 
 
