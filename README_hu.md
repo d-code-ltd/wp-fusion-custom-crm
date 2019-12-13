@@ -87,7 +87,7 @@ Más tekintetében hasznos átnézni és praktikus követni a WP fusion dokument
 - [Felhasználók - Fejlesztői útmutató - Magyar](https://docs.google.com/document/d/1lKJSEMT-731bWRIQsVnHL8sosQkqrx6rOI_VR6bWB5k/edit#heading=h.tnjtjhbffgks)
 - [Üzenetek - Fejlesztői útmutató - Magyar](https://docs.google.com/document/d/17ErCFzyhDO0uQ0581SnZsiCxNh7ZdtckB3snZHw2lwA/edit#heading=h.mxo62uqdt2f3)
 - [Contacts - Developer's guide - English](https://docs.google.com/document/d/1vPCd8_DrPGC1GYHEy6zyNFKy7ymYVjmj5wzUqYd30ds/edit#heading=h.xhfywkl8jbby)
-- [Message - Developer's guide - English](https://docs.google.com/document/d/1-bE9nNbik0ckN354bix6wH2zDZ9boFUGZV33ZWgWr8E/edit)
+- [Messages - Developer's guide - English](https://docs.google.com/document/d/1-bE9nNbik0ckN354bix6wH2zDZ9boFUGZV33ZWgWr8E/edit)
 - [MailEngine dokumentumtár](https://www.mailengine.hu/hu/dokumentumtar/)
 
 ## Authors
