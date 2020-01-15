@@ -13,8 +13,8 @@ This is a custom CRM extension for [WP Fusion](https://wpfusionplugin.com/) to c
 * Semi-bidirectional data sync (Pulling is available, but no webhook support). Basically bidirectional sync working triggered by WordPress event (through WP Fusion plugin) but not working directly triggered by MailEngine event.
    
   (Any data change directly in MailEngine not (yet) synchronizing into WordPress automatically.)
-* Leverage data of your WordPress users and send personalized emails to them via MailEngine
-* Check functions and features of [MailEngine](https://www.mailengine.hu/en/#functions)
+* Leverage data of your WordPress users and send personalized emails to them via MailEngine.
+* Check functions and features of [MailEngine](https://www.mailengine.hu/en/#functions).
 
 ## Getting Started
 
@@ -27,7 +27,10 @@ This is a custom CRM extension for [WP Fusion](https://wpfusionplugin.com/) to c
 
 This plugin is an extension for WP Fusion. 
 - Install WP Fusion or WP Fusion Lite to your WordPress site.
-- Then upload **MailEngine CRM extension** for WP Fusion (this plugin) via plugin upload (zipped) or copy it directly to */wp-content/plugins/* directory.
+- Then upload **MailEngine CRM extension** for WP Fusion (this plugin) via plugin upload (zipped) or copy it directly to */wp-content/plugins/* directory. The availability of the extension can be checked with the help of WordPress - [PHP info](https://wordpress.org/plugins/php-info-wp/) plugin, as the resulted riporting page (soap > Soap Client	enabled ; Soap Server	enabled).
+  - **The PHP - SOAP extension is not a WordPress plugin or setting**, but one general extension of the corresponding WordPress server to allow the usage of SOAP API calls. Definitely could not be installed through the administration page of the WordPress, but nowadays it is a basic function of a usual webserver. In case of unavailability:
+    - if you have administrator/root permissions for the server you could install it through the operation system standard method, 
+    - if not, you have to ask it from the system administator of the server.
 
 ### Setup
 
