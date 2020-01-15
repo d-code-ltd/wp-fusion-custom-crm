@@ -1,4 +1,4 @@
-# MailEngine CRM kiterjesztés a WP Fusion 
+# MailEngine CRM kiterjesztés a WP Fusion-höz
 
 > [English readme](README.md)
 
