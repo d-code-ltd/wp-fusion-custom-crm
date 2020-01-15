@@ -21,9 +21,9 @@ Ez a repo egy egyedi CRM kiterjesztést tartalmaz a [WP Fusion](https://wpfusion
 ### Követelmények
 
 - [WP Fusion](https://wpfusionplugin.com/) vagy [WP fusion lite](https://wordpress.org/plugins/wp-fusion-lite/) telepítése a WordPressben.
-- Telepített [PHP SoapClient](https://www.php.net/manual/en/class.soapclient.php) PHP kiterjesztés a kiszolgáló környezetben. A kiterjesztés rendelkezésre állása lekérdezhető a WordPress - [PHP info](https://wordpress.org/plugins/php-info-wp/) plugin telepítése után, a bővítmény által riportolt felületen ().
+- Telepített [PHP SoapClient](https://www.php.net/manual/en/class.soapclient.php) PHP kiterjesztés a kiszolgáló környezetben. A kiterjesztés rendelkezésre állása lekérdezhető a WordPress - [PHP info](https://wordpress.org/plugins/php-info-wp/) plugin telepítése után, a bővítmény által riportolt felületen (soap > Soap Client	enabled ; Soap Server	enabled).
   - A PHP - SOAP kiterjesztés nem a WordPress oldalhoz kapcsolódó egyedi beállítás, hanem a WordPress oldalt kiszolgáló szerver SOAP függvények használati lehetőségével bővítő kiegészítése. Kizárólag a WordPress adminisztrációs keretein belül nem telepíthető, de napjainkban jellemzően a webszerverek alapértelmezett funkciója. Amennyiben nem elérhető:
-    - ha adminisztrátorként/rendszergazdaként hozzáférünk a kiszolgáló környezethez, telepítsd az operációs rendszer lehetőségei mentén, 
+    - ha adminisztrátorként/rendszergazdaként hozzáférsz a kiszolgáló környezethez, telepítsd az operációs rendszer lehetőségei mentén, 
     - ha nem, akkor a kérdéssel/kéréssel fordulj a szerver üzemeltetőjéhez.
 
 ### Installáció
